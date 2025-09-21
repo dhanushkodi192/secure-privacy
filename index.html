@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>KDKS — Secure Login Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --success: #4cc9f0;
+      --error: #f72585;
+      --text: #e6e6e6;
+      --card-bg: rgba(25, 25, 45, 0.8);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated background elements */
+    .bg-bubbles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-bubbles li {
+      position: absolute;
+      list-style: none;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.15);
+      bottom: -160px;
+      border-radius: 50%;
+      animation: square 25s infinite;
+      transition-timing-function: linear;
+    }
+
+    .bg-bubbles li:nth-child(1) {
+      left: 10%;
+      animation-delay: 0s;
+      width: 80px;
+      height: 80px;
+    }
+
+    .bg-bubbles li:nth-child(2) {
+      left: 20%;
+      animation-delay: 2s;
+      animation-duration: 17s;
+      width: 60px;
+      height: 60px;
+    }
+
+    .bg-bubbles li:nth-child(3) {
+      left: 25%;
+      animation-delay: 4s;
+    }
+
+    .bg-bubbles li:nth-child(4) {
+      left: 40%;
+      animation-delay: 0s;
+      animation-duration: 22s;
+      width: 100px;
+      height: 100px;
+    }
+
+    .bg-bubbles li:nth-child(5) {
+      left: 70%;
+      animation-delay: 3s;
+    }
+
+    .bg-bubbles li:nth-child(6) {
+      left: 80%;
+      animation-delay: 2s;
+      width: 120px;
+      height: 120px;
+    }
+
+    .bg-bubbles li:nth-child(7) {
+      left: 32%;
+      animation-delay: 6s;
+      width: 70px;
+      height: 70px;
+    }
+
+    .bg-bubbles li:nth-child(8) {
+      left: 55%;
+      animation-delay: 8s;
+      animation-duration: 18s;
+      width: 50px;
+      height: 50px;
+    }
+
+    .bg-bubbles li:nth-child(9) {
+      left: 25%;
+      animation-delay: 9s;
+      animation-duration: 20s;
+      width: 30px;
+      height: 30px;
+    }
+
+    .bg-bubbles li:nth-child(10) {
+      left: 90%;
+      animation-delay: 11s;
+      width: 90px;
+      height: 90px;
+    }
+
+    @keyframes square {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 50%;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+      }
+    }
+
+    /* Login container */
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 35px 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent
+      );
+      transform: rotate(45deg);
+      animation: shine 6s infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        left: -50%;
+      }
+      100% {
+        left: 150%;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo-icon {
+      font-size: 40px;
+      color: var(--success);
+      margin-bottom: 10px;
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, var(--success));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 5px;
+    }
+
+    .logo p {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+    }
+
+    .form-group label i {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+
+    .select-wrapper, .input-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: '\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 14px 15px;
+      background: var(--input-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: var(--transition);
+      appearance: none;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.3);
+    }
+
+    .password-container {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.6);
+      transition: var(--transition);
+    }
+
+    .toggle-password:hover {
+      color: var(--success);
+    }
+
+    /* Button */
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      transition: var(--transition);
+      z-index: -1;
+    }
+
+    .login-btn:hover::before {
+      left: 0;
+    }
+
+    .login-btn:hover {
+      box-shadow: 0 5px 15px rgba(114, 9, 183, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      margin: 20px auto 0;
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid var(--success);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error message */
+    .error {
+      color: var(--error);
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .login-container {
+        padding: 15px;
+      }
+      
+      .login-card {
+        padding: 25px 20px;
+      }
+      
+      .logo h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated background elements -->
+  <ul class="bg-bubbles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1>KDKS Secure Portal</h1>
+        <p>Authentication Required</p>
+      </div>
+
+      <div class="form-group">
+        <label for="role"><i class="fas fa-user-tag"></i> Access Level</label>
+        <div class="select-wrapper">
+          <select id="role">
+            <option value="admin">Administrator</option>
+            <option value="user">Standard User</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username"><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="username" placeholder="Enter your username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password"><i class="fas fa-lock"></i> Password</label>
+        <div class="password-container">
+          <input type="password" id="password" placeholder="Enter your password" required>
+          <span class="toggle-password" onclick="togglePassword()">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+      </div>
+
+      <button id="loginBtn" class="login-btn">
+        <span>Secure Login</span>
+      </button>
+      
+      <div class="loader" id="loader"></div>
+      <p class="error" id="errorMsg"></p>
+      
+      <div class="footer">
+        <p>© 2025 KDKS Security Systems | Protected Access</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+    const loader = document.getElementById("loader");
+    const errorMsg = document.getElementById("errorMsg");
+
+    function togglePassword() {
+      const passField = document.getElementById("password");
+      const eyeIcon = document.querySelector('.toggle-password i');
+      
+      if (passField.type === "password") {
+        passField.type = "text";
+        eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passField.type = "password";
+        eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function login() {
+      const role = document.getElementById("role").value;
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      const creds = {
+        admin: { username: "admin", password: "admin123" },
+        user: { username: "user", password: "user123" }
+      };
+
+      errorMsg.textContent = "";
+
+      if (!user || !pass) {
+        errorMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter both username and password.';
+        return;
+      }
+
+      if (user === creds[role].username && pass === creds[role].password) {
+        loader.style.display = "block";
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span>Authenticating...</span>';
+        
+        sessionStorage.setItem("sessionRole", role);
+        localStorage.setItem("user", user);
+        
+        setTimeout(() => {
+          window.location.href = role === "admin" ? "admin.html" : "user.html";
+        }, 1200);
+      } else {
+        errorMsg.innerHTML = '<i class="fas fa-times-circle"></i> Invalid login credentials!';
+        // Add shake animation to indicate error
+        const loginCard = document.querySelector('.login-card');
+        loginCard.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          loginCard.style.animation = '';
+        }, 500);
+      }
+    }
+
+    // Add shake animation for error state
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-8px); }
+        40%, 80% { transform: translateX(8px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    loginBtn.addEventListener("click", login);
+    document.addEventListener("keydown", e => { 
+      if (e.key === "Enter") login();
+    });
+  </script>
+</body>
+</html>
